@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonStartStop: Button
     private lateinit var buttonReset: Button
     private var isRunning: Boolean = false
-    private var pauseTime: Long = 0L
+    private var timeElapsed: Long = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,23 +33,21 @@ class MainActivity : AppCompatActivity() {
             if (!isRunning) {
                 isRunning = true
                 buttonStartStop.text = "Stop"
-                if (pauseTime != 0L) timer.base = pauseTime
+                if (timeElapsed == 0L) timeElapsed = 0
+                timer.base = SystemClock.elapsedRealtime() - timeElapsed
                 timer.start()
             }
             else {
                 isRunning = false
                 buttonStartStop.text = "Start"
                 timer.stop()
-                pauseTime = timer.base
+                timeElapsed = SystemClock.elapsedRealtime() - timer.base
             }
         }
 
         buttonReset.setOnClickListener {
-            isRunning = false
-            buttonStartStop.text = "Start"
-            timer.stop()
             timer.base = SystemClock.elapsedRealtime()
-            pauseTime = timer.base
+            timeElapsed = 0
         }
     }
 
