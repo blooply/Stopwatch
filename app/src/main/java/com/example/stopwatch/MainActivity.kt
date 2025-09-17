@@ -11,6 +11,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        val TAG = "MainActivity"
+        val STATE_IS_RUNNING = "running"
+        val TIME_ELAPSED = "time"
+    }
+
     private lateinit var timer: Chronometer
     private lateinit var buttonStartStop: Button
     private lateinit var buttonReset: Button
@@ -28,6 +34,21 @@ class MainActivity : AppCompatActivity() {
         }
         Log.d("MainActivity", "onCreate: ")
         wireWidgets()
+
+        if (savedInstanceState != null) {
+            isRunning = savedInstanceState.getBoolean(STATE_IS_RUNNING)
+            timeElapsed = savedInstanceState.getLong(TIME_ELAPSED)
+
+            if (isRunning) {
+                buttonStartStop.text = "Stop"
+                timer.base = SystemClock.elapsedRealtime() - timeElapsed
+                timer.start()
+            }
+            else {
+                buttonStartStop.text = "Resume"
+                timer.base = SystemClock.elapsedRealtime() - timeElapsed
+            }
+        }
 
         buttonStartStop.setOnClickListener {
             if (!isRunning) {
@@ -85,5 +106,14 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("MainActivity", "onDestroy: ")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        timer.stop()
+        outState.putBoolean(STATE_IS_RUNNING, isRunning)
+        timeElapsed = SystemClock.elapsedRealtime() - timer.base
+        outState.putLong(TIME_ELAPSED, timeElapsed)
+
+        super.onSaveInstanceState(outState)
     }
 }
