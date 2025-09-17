@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         timer.stop()
         outState.putBoolean(STATE_IS_RUNNING, isRunning)
-        timeElapsed = SystemClock.elapsedRealtime() - timer.base
+        if (isRunning) timeElapsed = SystemClock.elapsedRealtime() - timer.base
         outState.putLong(TIME_ELAPSED, timeElapsed)
 
         super.onSaveInstanceState(outState)
