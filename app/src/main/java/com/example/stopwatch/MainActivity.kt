@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         buttonStartStop.setOnClickListener {
             if (!isRunning) {
                 isRunning = true
-                buttonStartStop.text = "Pause"
+                buttonStartStop.text = "Stop"
                 timer.base = SystemClock.elapsedRealtime() - timeElapsed
                 timer.start()
             }
